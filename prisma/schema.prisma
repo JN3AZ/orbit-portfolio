@@ -5,6 +5,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// provider stays "sqlite" — Turso is libSQL (SQLite-compatible).
+// Migrations run against local file SQLite; the app uses Turso via driver adapter.
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")

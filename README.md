@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Orbit Portfolio
 
-## Getting Started
+Personal portfolio built with Next.js, Tailwind, and a Turso-backed guestbook.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Guestbook database (Turso)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Local SQLite works for development, but **Vercel needs a remote DB**. This project uses [Turso](https://turso.tech) (hosted libSQL / SQLite-compatible).
 
-## Learn More
+### 1. Create a free Turso database
 
-To learn more about Next.js, take a look at the following resources:
+1. Sign up at [https://app.turso.tech](https://app.turso.tech)
+2. Create a database (e.g. `orbit-portfolio`)
+3. Open **Connect** and copy:
+   - **URL** → `TURSO_DATABASE_URL` (starts with `libsql://`)
+   - **Auth token** → `TURSO_AUTH_TOKEN`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Configure local env
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Put both values in `.env`:
 
-## Deploy on Vercel
+```env
+DATABASE_URL="file:./dev.db"
+TURSO_DATABASE_URL="libsql://your-db-name-your-org.turso.io"
+TURSO_AUTH_TOKEN="your-token"
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Create the Message table on Turso
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run db:turso
+```
+
+### 4. Configure Vercel
+
+In the Vercel project → **Settings → Environment Variables**, add:
+
+| Name | Value |
+|------|--------|
+| `TURSO_DATABASE_URL` | your `libsql://...` URL |
+| `TURSO_AUTH_TOKEN` | your Turso auth token |
+| `DATABASE_URL` | `file:./dev.db` (used at build/generate time) |
+
+Redeploy after saving.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run db:turso` | Apply guestbook schema to Turso |
+
+## Deploy
+
+Push to `main` on GitHub; Vercel deploys automatically when the project is linked.

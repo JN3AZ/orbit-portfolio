@@ -7,9 +7,12 @@
     "build": "prisma generate && next build",
     "postinstall": "prisma generate",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:turso": "node scripts/apply-turso-schema.mjs"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "@prisma/adapter-libsql": "^6.19.3",
     "@prisma/client": "^6.19.3",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.25.0",
@@ -23,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.11",
     "prisma": "^6.19.3",
