@@ -1,11 +1,12 @@
+import type { Message } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { GuestbookForm } from "@/components/GuestbookForm";
-import { formatDistanceToNow } from "date-fns"; // we'll install this next
+import { formatDistanceToNow } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
 export default async function GuestbookPage() {
-  const messages = await prisma.message.findMany({
+  const messages: Message[] = await prisma.message.findMany({
     orderBy: { createdAt: "desc" },
     take: 50,
   });
